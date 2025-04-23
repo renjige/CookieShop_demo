@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
 <!DOCTYPE html>
 <html>
@@ -171,23 +172,34 @@
 <!-- 显示评价列表 -->
 <div class="container review-section review-list">
 	<h3>商品评价</h3>
+
 	<c:if test="${not empty reviews}">
 		<c:forEach items="${reviews}" var="review">
 			<div class="review-item">
+				<!-- 星级 -->
 				<div class="rating">
 					<c:forEach begin="1" end="${review.rating}">
 						★
 					</c:forEach>
 				</div>
-				<div class="comment">
-					<p>${review.comment}</p>
+				<!-- 用户名 -->
+				<div class="username">
+					<strong>用户：</strong>${review.username}
 				</div>
+				<!-- 评论内容 -->
+				<div class="comment">
+						${review.comment}
+				</div>
+				<!-- 格式化后的评价时间 -->
 				<div class="created-at">
-					<p>评价时间：${review.createdAt}</p>
+					<strong>评价时间：</strong>
+					<fmt:formatDate value="${review.createdAt}"
+									pattern="yyyy-MM-dd HH:mm:ss"/>
 				</div>
 			</div>
 		</c:forEach>
 	</c:if>
+
 	<c:if test="${empty reviews}">
 		<p class="text-muted">暂无评价。</p>
 	</c:if>

@@ -9,15 +9,36 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class ReviewDao {
+
+    /** 新增评论 */
     public void addReview(Review review) throws SQLException {
-        QueryRunner r = new QueryRunner(DataSourceUtils.getDataSource());
+        QueryRunner qr = new QueryRunner(DataSourceUtils.getDataSource());
         String sql = "INSERT INTO review (goods_id, user_id, rating, comment) VALUES (?,?,?,?)";
-        r.update(sql, review.getGoodsId(), review.getUserId(), review.getRating(), review.getComment());
+        qr.update(sql,
+                review.getGoodsId(),
+                review.getUserId(),
+                review.getRating(),
+                review.getComment()
+        );
     }
 
+    /** 根据商品 ID 查询评论（带用户名+时间） */
     public List<Review> getReviewsByGoodsId(int goodsId) throws SQLException {
-        QueryRunner r = new QueryRunner(DataSourceUtils.getDataSource());
-        String sql = "SELECT * FROM review WHERE goods_id = ?";
-        return r.query(sql, new BeanListHandler<Review>(Review.class), goodsId);
+        QueryRunner qr = new QueryRunner(DataSourceUtils.getDataSource());
+        // 显式别名 created_at -> createdAt，username -> username
+        String sql = ""
+                + "SELECT "
+                + "  r.id, "
+                + "  r.goods_id      AS goodsId, "
+                + "  r.user_id       AS userId, "
+                + "  r.rating, "
+                + "  r.comment, "
+                + "  r.created_at    AS createdAt, "
+                + "  u.username      AS username "
+                + "FROM review r "
+                + "JOIN user u ON r.user_id = u.id "
+                + "WHERE r.goods_id = ? "
+                + "ORDER BY r.created_at DESC";
+        return qr.query(sql, new BeanListHandler<>(Review.class), goodsId);
     }
 }
