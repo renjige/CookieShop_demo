@@ -41,4 +41,12 @@ public class ReviewDao {
                 + "ORDER BY r.created_at DESC";
         return qr.query(sql, new BeanListHandler<>(Review.class), goodsId);
     }
+    /**
+     * 根据评论 ID 删除一条评论
+     */
+    public void deleteReview(int reviewId) throws SQLException {
+        QueryRunner qr = new QueryRunner(DataSourceUtils.getDataSource());
+        String sql = "DELETE FROM review WHERE id = ?";
+        qr.update(sql, reviewId);
+    }
 }

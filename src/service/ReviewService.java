@@ -25,4 +25,16 @@ public class ReviewService {
             return null;
         }
     }
+    /**
+     * 删除评论
+     * @param reviewId 评论 ID
+     */
+    public void deleteReview(int reviewId) {
+        try {
+            reviewDao.deleteReview(reviewId);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

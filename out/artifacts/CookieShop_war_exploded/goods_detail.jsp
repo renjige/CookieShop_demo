@@ -175,7 +175,19 @@
 
 	<c:if test="${not empty reviews}">
 		<c:forEach items="${reviews}" var="review">
-			<div class="review-item">
+			<div class="review-item" style="position: relative;">
+				<!-- 删除按钮：管理员或作者可见，固定右上角 -->
+				<c:if test="${not empty sessionScope.user
+	                   && (sessionScope.user.username == 'admin'
+	                       || sessionScope.user.id == review.userId)}">
+					<a href="delete_review?reviewId=${review.id}&goodsId=${g.id}&commentOwnerId=${review.userId}"
+					   class="btn btn-danger btn-sm"
+					   style="position:absolute; top:10px; right:10px;"
+					   onclick="return confirm('确定删除该评论吗？');">
+						删除
+					</a>
+				</c:if>
+
 				<!-- 星级 -->
 				<div class="rating">
 					<c:forEach begin="1" end="${review.rating}">
@@ -193,8 +205,7 @@
 				<!-- 格式化后的评价时间 -->
 				<div class="created-at">
 					<strong>评价时间：</strong>
-					<fmt:formatDate value="${review.createdAt}"
-									pattern="yyyy-MM-dd HH:mm:ss"/>
+					<fmt:formatDate value="${review.createdAt}" pattern="yyyy-MM-dd HH:mm:ss"/>
 				</div>
 			</div>
 		</c:forEach>
